@@ -7,8 +7,14 @@
 -- Set TMP2 (optional) to the modifier code to set modifiers
 -- Use the debug HUD to see the values before setting them 
 
--- originally by boxmein with tremendous help from cracker64 and jacob1
+-- originally by boxmein
 -- modified by ILikePython256 on GitHub
+
+-- Changelog:
+
+--  v1.0 - v1.2: (Changelog not used yet)
+--  v1.3: KSNS now blocks keys it's set to from activating system functions,
+--       e.g. a KEYS set to Z will block the zoom function (except while paused)
 
 -- This version modified to use the Event API
 
@@ -25,7 +31,7 @@ function dump(o)
    end
 end
 
-local el = elements.allocate("ilikepython", "KEYS")
+local KEYS_id = elements.allocate("ilikepython", "KEYS")
 
 local lastkeyn = 0
 local lastmod = 0
@@ -104,18 +110,28 @@ function keydown (key, scan, isRepeat, shift, ctrl, alt)
   if alt then lastmod = lastmod + 4 end
   lastkeyn = scan
   pressing = true
+  if tpt.set_pause() == 0 then --Don't block while paused
+		for i in sim.parts() do
+			part = tpt.parts[i]
+			if part.type == KEYS_id then
+				if part.tmp == scan and (part.tmp2 == -1 or part.tmp2 == lastmod) then
+					return false
+				end
+			end
+		end
+  end
 end
 
 event.register(event.keypress, keydown)
 event.register(event.keyrelease, keyup)
 
-elements.element(el, elements.element(elements.DEFAULT_PT_DMND))
-elements.property(el, "Name", "KEYS")
-elements.property(el, "Colour", "0xFF00FFFF") 
-elements.property(el, "Description", "Keyboard Sensor. Creates a spark when a key with code equal to tmp and (if tmp2 is not -1) modifiers equal to tmp2 is pressed.") 
-elements.property(el, "MenuSection", elements.SC_SENSOR)
-elements.property(el, "Update", KEYS_update) 
-elements.property(el, "Graphics", KEYS_graphics) 
+elements.element(KEYS_id, elements.element(elements.DEFAULT_PT_DMND))
+elements.property(KEYS_id, "Name", "KEYS")
+elements.property(KEYS_id, "Colour", "0xFF00FFFF") 
+elements.property(KEYS_id, "Description", "Keyboard Sensor. Creates a spark when a key with code equal to tmp and (if tmp2 is not -1) modifiers equal to tmp2 is pressed.") 
+elements.property(KEYS_id, "MenuSection", elements.SC_SENSOR)
+elements.property(KEYS_id, "Update", KEYS_update) 
+elements.property(KEYS_id, "Graphics", KEYS_graphics) 
 
 -- # ====================================================================== # --
 -- # Debugging
@@ -142,7 +158,7 @@ end
 function debuglog ()
   if ren.debugHUD() ==  1 then
     tpt.drawtext(20, 50, 
-      "KEYS 1.2" ..
+      "KEYS 1.3" ..
       "\nkeycode: " .. lastkeyn .. 
       "\nmod: " .. lastmod .. " / " .. getmodtext(lastmod) .. 
       "\npressing: " .. tostring(pressing))
