@@ -1,5 +1,5 @@
 # KEYS
-A Powder Toy element for detecting keypresses
+A Powder Toy element for detecting keypresses, modified from [boxmein's KSNS element]
 
 ## Installation
 Probably the best way to use this is to download [Jacob1's Mod] and add this repository (or just KEYS.lua) to the scripts folder
@@ -11,5 +11,5 @@ Lastly, you can make it the autorun file:
  - Rename ```KEYS.lua``` to ```autorun.lua```
 
 
-
+[boxmein's KSNS element]: https://gist.github.com/boxmein/5730768
 [Jacob1's Mod]: https://powdertoy.co.uk/Discussions/Thread/View.html?Thread=11117
