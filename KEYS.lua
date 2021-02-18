@@ -1,4 +1,6 @@
---[ KEYS v1.2 ]--
+--[ KEYS v1.3 ]--
+
+-- https://github.com/ILikePython256/KEYS
 
 -- Modified from https://gist.github.com/boxmein/5730768
 -- Keyboard sensor element (KEYS)
